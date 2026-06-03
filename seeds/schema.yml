@@ -1,0 +1,109 @@
+version: 2
+
+seeds:
+  - name: raw_customers
+    description: "Raw customer data loaded from CSV."
+    columns:
+      - name: id
+        tests:
+          - not_null
+          - unique
+      - name: name
+        tests:
+          - not_null
+
+  - name: raw_orders
+    description: "Raw order data loaded from CSV."
+    columns:
+      - name: id
+        tests:
+          - not_null
+          - unique
+      - name: customer
+        tests:
+          - not_null
+          - relationships:
+              to: ref('raw_customers')
+              field: id
+      - name: store_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('raw_stores')
+              field: id
+      - name: subtotal
+        tests:
+          - non_negative
+      - name: tax_paid
+        tests:
+          - non_negative
+      - name: order_total
+        tests:
+          - non_negative
+
+  - name: raw_items
+    description: "Raw order item data loaded from CSV."
+    columns:
+      - name: id
+        tests:
+          - not_null
+          - unique
+      - name: order_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('raw_orders')
+              field: id
+      - name: sku
+        tests:
+          - not_null
+          - relationships:
+              to: ref('raw_products')
+              field: sku
+
+  - name: raw_products
+    description: "Raw product catalog loaded from CSV."
+    columns:
+      - name: sku
+        tests:
+          - not_null
+          - unique
+      - name: type
+        tests:
+          - accepted_values:
+              values: ['jaffle', 'beverage']
+      - name: price
+        tests:
+          - positive
+
+  - name: raw_stores
+    description: "Raw store data loaded from CSV."
+    columns:
+      - name: id
+        tests:
+          - not_null
+          - unique
+      - name: tax_rate
+        tests:
+          - between_zero_and_one
+
+  - name: raw_supplies
+    description: "Raw supplies data loaded from CSV."
+    tests:
+      - unique_combination_of_columns:
+          combination_of_columns:
+            - id
+            - sku
+    columns:
+      - name: id
+        tests:
+          - not_null
+      - name: sku
+        tests:
+          - not_null
+          - relationships:
+              to: ref('raw_products')
+              field: sku
+      - name: cost
+        tests:
+          - non_negative

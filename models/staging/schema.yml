@@ -1,0 +1,118 @@
+version: 2
+
+models:
+  - name: stg_customers
+    description: "Cleaned customer seed data."
+    columns:
+      - name: customer_id
+        tests:
+          - not_null
+          - unique
+      - name: customer_name
+        tests:
+          - not_null
+
+  - name: stg_orders
+    description: "Cleaned order seed data."
+    columns:
+      - name: order_id
+        tests:
+          - not_null
+          - unique
+      - name: customer_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_customers')
+              field: customer_id
+      - name: store_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_stores')
+              field: store_id
+      - name: ordered_at
+        tests:
+          - not_null
+      - name: subtotal
+        tests:
+          - non_negative
+      - name: tax_paid
+        tests:
+          - non_negative
+      - name: order_total
+        tests:
+          - non_negative
+
+  - name: stg_order_items
+    description: "One row per item sold in an order."
+    columns:
+      - name: order_item_id
+        tests:
+          - not_null
+          - unique
+      - name: order_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_orders')
+              field: order_id
+      - name: product_sku
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_products')
+              field: product_sku
+
+  - name: stg_products
+    description: "Cleaned product catalog."
+    columns:
+      - name: product_sku
+        tests:
+          - not_null
+          - unique
+      - name: product_name
+        tests:
+          - not_null
+      - name: product_type
+        tests:
+          - accepted_values:
+              values: ['jaffle', 'beverage']
+      - name: price
+        tests:
+          - positive
+
+  - name: stg_stores
+    description: "Cleaned store data."
+    columns:
+      - name: store_id
+        tests:
+          - not_null
+          - unique
+      - name: store_name
+        tests:
+          - not_null
+      - name: tax_rate
+        tests:
+          - between_zero_and_one
+
+  - name: stg_supplies
+    description: "Supplies required for products."
+    tests:
+      - unique_combination_of_columns:
+          combination_of_columns:
+            - supply_id
+            - product_sku
+    columns:
+      - name: supply_id
+        tests:
+          - not_null
+      - name: product_sku
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_products')
+              field: product_sku
+      - name: cost
+        tests:
+          - non_negative

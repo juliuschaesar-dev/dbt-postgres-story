@@ -1,0 +1,75 @@
+name: dbt_learning
+version: "1.0.0"
+config-version: 2
+
+profile: dbt_learning
+
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+clean-targets:
+  - target
+  - dbt_packages
+
+models:
+  dbt_learning:
+    staging:
+      +materialized: view
+      +schema: staging
+    intermediate:
+      +materialized: table
+      +schema: intermediate
+    marts:
+      +materialized: table
+      +schema: marts
+
+snapshots:
+  dbt_learning:
+    +target_schema: snapshots
+
+seeds:
+  dbt_learning:
+    +schema: staging
+    +quote_columns: false
+    raw_customers:
+      +column_types:
+        id: varchar(64)
+        name: varchar(255)
+    raw_orders:
+      +column_types:
+        id: varchar(64)
+        customer: varchar(64)
+        ordered_at: timestamp
+        store_id: varchar(64)
+        subtotal: integer
+        tax_paid: integer
+        order_total: integer
+    raw_items:
+      +column_types:
+        id: varchar(64)
+        order_id: varchar(64)
+        sku: varchar(32)
+    raw_products:
+      +column_types:
+        sku: varchar(32)
+        name: varchar(255)
+        type: varchar(64)
+        price: integer
+        description: text
+    raw_stores:
+      +column_types:
+        id: varchar(64)
+        name: varchar(255)
+        opened_at: timestamp
+        tax_rate: numeric(10, 4)
+    raw_supplies:
+      +column_types:
+        id: varchar(64)
+        name: varchar(255)
+        cost: integer
+        perishable: boolean
+        sku: varchar(32)
