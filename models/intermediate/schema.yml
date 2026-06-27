@@ -1,0 +1,78 @@
+version: 2
+
+models:
+  - name: fact_order_items
+    description: "Reusable item-level fact table enriched with customer, store, and product attributes."
+    columns:
+      - name: order_item_id
+        tests:
+          - not_null
+          - unique
+      - name: order_id
+        tests:
+          - not_null
+      - name: product_sku
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_products')
+              field: product_sku
+      - name: customer_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_customers')
+              field: customer_id
+      - name: item_price
+        tests:
+          - positive
+      - name: subtotal
+        tests:
+          - non_negative
+      - name: tax_paid
+        tests:
+          - non_negative
+      - name: order_total
+        tests:
+          - non_negative
+
+  - name: dim_customers
+    description: "Reusable customer dimension with lifetime order metrics."
+    columns:
+      - name: customer_id
+        tests:
+          - not_null
+          - unique
+      - name: customer_name
+        tests:
+          - not_null
+      - name: total_orders
+        tests:
+          - non_negative
+      - name: lifetime_order_total
+        tests:
+          - non_negative
+
+  - name: dim_products
+    description: "Reusable product dimension with summarized supply costs."
+    columns:
+      - name: product_sku
+        tests:
+          - not_null
+          - unique
+      - name: product_name
+        tests:
+          - not_null
+      - name: product_type
+        tests:
+          - accepted_values:
+              values: ['jaffle', 'beverage']
+      - name: price
+        tests:
+          - positive
+      - name: supply_count
+        tests:
+          - non_negative
+      - name: total_supply_cost
+        tests:
+          - non_negative

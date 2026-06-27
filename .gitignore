@@ -6,11 +6,3 @@ logs/
 profiles-local.yml
 __pycache__/
 .pytest_cache/
-models/intermediate/*
-!models/intermediate/.gitkeep
-models/marts/*
-!models/marts/.gitkeep
-snapshots/snap_customers.sql
-snapshots/snap_products.sql
-tests/assert_customer_performance_matches_orders.sql
-tests/assert_daily_revenue_matches_orders.sql

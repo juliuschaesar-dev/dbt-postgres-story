@@ -1,0 +1,82 @@
+version: 2
+
+models:
+  - name: mart_daily_revenue
+    description: "Daily revenue by store for analytics and reporting."
+    tests:
+      - unique_combination_of_columns:
+          combination_of_columns:
+            - ordered_date
+            - store_id
+    columns:
+      - name: ordered_date
+        tests:
+          - not_null
+      - name: store_id
+        tests:
+          - not_null
+      - name: total_orders
+        tests:
+          - non_negative
+      - name: total_items_sold
+        tests:
+          - non_negative
+      - name: gross_item_revenue
+        tests:
+          - non_negative
+      - name: subtotal_revenue
+        tests:
+          - non_negative
+      - name: tax_revenue
+        tests:
+          - non_negative
+      - name: total_revenue
+        tests:
+          - non_negative
+
+  - name: mart_customer_performance
+    description: "Customer-level analytics for order frequency and lifetime value."
+    columns:
+      - name: customer_id
+        tests:
+          - not_null
+          - unique
+      - name: customer_name
+        tests:
+          - not_null
+      - name: total_orders
+        tests:
+          - non_negative
+      - name: lifetime_order_total
+        tests:
+          - non_negative
+      - name: average_order_value
+        tests:
+          - non_negative
+
+  - name: mart_product_performance
+    description: "Product-level analytics combining sales volume, revenue, and supply attributes."
+    columns:
+      - name: product_sku
+        tests:
+          - not_null
+          - unique
+      - name: product_name
+        tests:
+          - not_null
+      - name: product_type
+        tests:
+          - accepted_values:
+              values: ['jaffle', 'beverage']
+      - name: price
+        tests:
+          - positive
+      - name: total_items_sold
+        tests:
+          - non_negative
+      - name: total_orders
+        tests:
+          - non_negative
+      - name: gross_revenue
+        tests:
+          - non_negative
