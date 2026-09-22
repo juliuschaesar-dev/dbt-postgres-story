@@ -46,6 +46,12 @@ No local Python or DBT installation is required. DBT runs inside the Docker cont
 
 ## Getting Started
 
+Create the `.env` file from the example (adjust the values if needed):
+
+```powershell
+copy .env.example .env
+```
+
 Build the DBT image:
 
 ```powershell

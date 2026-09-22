@@ -1,17 +1,17 @@
 services:
   postgres:
-    image: postgres:16-alpine
+    image: postgres:18-alpine
     container_name: postgres
     environment:
-      POSTGRES_USER: dbt
-      POSTGRES_PASSWORD: dbt
-      POSTGRES_DB: analytics
+      POSTGRES_USER: ${DBT_USER}
+      POSTGRES_PASSWORD: ${DBT_PASSWORD}
+      POSTGRES_DB: ${DBT_DBNAME}
     ports:
-      - "5432:5432"
+      - "${DBT_PORT}:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U dbt -d analytics"]
+      test: ["CMD-SHELL", "pg_isready -U ${DBT_USER} -d ${DBT_DBNAME}"]
       interval: 5s
       timeout: 5s
       retries: 10
@@ -23,12 +23,13 @@ services:
       postgres:
         condition: service_healthy
     environment:
-      DBT_HOST: postgres
-      DBT_PORT: 5432
-      DBT_USER: dbt
-      DBT_PASSWORD: dbt
-      DBT_DBNAME: analytics
-      DBT_SCHEMA: dbt
+      DBT_HOST: ${DBT_HOST}
+      DBT_PORT: ${DBT_PORT}
+      DBT_USER: ${DBT_USER}
+      DBT_PASSWORD: ${DBT_PASSWORD}
+      DBT_DBNAME: ${DBT_DBNAME}
+      DBT_SCHEMA: ${DBT_SCHEMA}
+      DBT_THREADS: ${DBT_THREADS}
     volumes:
       - .:/usr/app
     working_dir: /usr/app
