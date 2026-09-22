@@ -32,6 +32,7 @@ CSV seeds
 |-- docker-compose.yml     # Local Postgres and dbt services
 |-- dbt_project.yml        # DBT project configuration
 |-- profiles.yml           # DBT profile used inside Docker
+|-- .env.example           # Template for local connection env vars
 `-- requirements.txt       # Python package dependencies for the dbt image
 ```
 
