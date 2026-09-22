@@ -229,11 +229,3 @@ Run all tests with:
 ```powershell
 docker compose run --rm dbt test
 ```
-
-## Learning Exercises
-
-1. Add `dim_stores` in the intermediate layer from `stg_stores`.
-2. Create `mart_monthly_revenue` from `mart_daily_revenue`.
-3. Add accepted value tests for product types.
-4. Add a mart that ranks customers by lifetime revenue.
-5. Generate DBT docs and inspect the lineage graph.
